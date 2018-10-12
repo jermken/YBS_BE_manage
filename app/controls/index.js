@@ -1,1 +1,1 @@
-exports.userList = require('./userList.js')
+exports.user = require('./user.js')

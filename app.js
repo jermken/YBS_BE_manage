@@ -18,14 +18,21 @@ const db_connection = mysql.createConnection({
     ...dbConfig,
     useConnectionPooling: true
 })
-db_connection.connect()
 
 const sessionStore = new MySqlStore({
     expiration: 86400000,
     autoReconnect: true,
     keepAlive: true,
     keepAliveInterval: 30000,
-    createDatabaseTable: true
+    createDatabaseTable: true,
+    schema: {
+        tableName: 'session',
+        columnNames: {
+            session_id: 'id',
+            expires: 'expires',
+            data: 'data'
+        }
+    }
 }, db_connection)
 // session 中间件
 app.use(session({
