@@ -1,1 +1,7 @@
 exports.user = require('./user.js')
+exports.login = require('./login')
+exports.bill = require('./bill')
+exports.card = require('./bill')
+exports.goods = require('./goods')
+exports.setMeal = require('./setMeal')
+exports.staff = require('./staff')

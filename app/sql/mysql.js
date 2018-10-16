@@ -3,13 +3,13 @@ const { dbConfig } = require('../configs/index.js')
 
 const pool = mysql.createPool({ ...dbConfig })
 
-let query = (sql, values) => {
+let query = (sql) => {
     return new Promise((resolve, reject) => {
         pool.getConnection((err, connection) => {
             if (err) {
                 reject(err)
             } else {
-                connection.query(sql, values, (err, rows) => {
+                connection.query(sql, (err, rows) => {
                     if (err) {
                         reject(err)
                     } else {
@@ -26,8 +26,8 @@ let query = (sql, values) => {
  * 用户表
  * id  唯一标志
 */
-let fUsers = 
-    `create table if not exists fusers(
+let SysUsers =
+    `create table if not exists sys_users(
         id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL COMMENT '用户名',
         password VARCHAR(100) NOT NULL COMMENT '密码',
@@ -70,7 +70,7 @@ let createTable = (sql) => {
     return query(sql, [])
 }
 // 建表
-createTable(fUsers)
+createTable(SysUsers)
 createTable(Users)
 createTable(Bills)
 
