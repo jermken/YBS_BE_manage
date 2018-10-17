@@ -35,6 +35,24 @@ let SysUsers =
         update_time VARCHAR(100) NOT NULL COMMENT '修改时间',
         PRIMARY KEY(id)
     );`
+
+/** 
+ * 员工表
+ * id  唯一标志
+*/
+let Staffs =
+`create table if not exists staffs(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL COMMENT '员工名',
+    tell VARCHAR(100) NOT NULL COMMENT '联系方式',
+    sexual VARCHAR(100) NOT NULL COMMENT '性别',
+    birthday VARCHAR(100) NOT NULL COMMENT '生日',
+    role VARCHAR(100) NOT NULL COMMENT '角色',
+    status INT NOT NULL COMMENT '状态',
+    create_time VARCHAR(100) NOT NULL COMMENT '注册时间',
+    update_time VARCHAR(100) NOT NULL COMMENT '修改时间',
+    PRIMARY KEY(id)
+);`
     
 /** 
  * 客户表
@@ -71,6 +89,7 @@ let createTable = (sql) => {
 }
 // 建表
 createTable(SysUsers)
+createTable(Staffs)
 createTable(Users)
 createTable(Bills)
 

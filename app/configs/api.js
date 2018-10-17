@@ -16,6 +16,7 @@ module.exports = {
     register: '/api/register',
     passwordChange: '/api/password_change',
     login: '/api/login',
+    loginOut: '/api/out_login',
     // 员工
     getStaffList: '/api/get_staff',
     addStaff: '/api/add_staff',

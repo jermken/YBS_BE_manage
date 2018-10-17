@@ -1,9 +1,9 @@
-module.exports = {
-    filterQueryStr(obj, queryObj) {
+const utilFunc = {
+    querySql(tableName, obj, queryArr) {
         let str = ''
         let arr = []
         for(let i in obj) {
-            if (obj[i] !== '' && queryObj.includes(i)) {
+            if (obj[i] !== '' && queryArr.includes(i)) {
                 if (isNaN(obj[i])) {
                     arr.push(`${i}='${obj[i]}'`)
                 } else {
@@ -13,7 +13,44 @@ module.exports = {
         }
         str = arr.join(' AND ')
         str = str? `where ${str}` : ''
-        return str
+        let limit = utilFunc.getLimit(obj.page, obj.pageSize)
+        return `SELECT * FROM ${tableName} ${str} LIMIT ${limit.start},${limit.length}`
+    },
+    updateSql(tableName, obj, updateArr, where) {
+        let str = ''
+        let arr = []
+        for(let i in obj) {
+            if (obj[i] !== '' && updateArr.includes(i)) {
+                if (isNaN(obj[i])) {
+                    arr.push(`${i}='${obj[i]}'`)
+                } else {
+                    arr.push(`${i}=${obj[i]}`)
+                }
+            }
+        }
+        str = arr.join(',')
+        str = str? ` ${str}` : ''
+        let whereStr = where? `${where}='${obj[where]}'` : `id=${obj.id}`
+        return `UPDATE ${tableName} SET ${str} WHERE ${whereStr}`
+    },
+    addSql(tableName, obj, addArr) {
+        let arr = []
+        for(let i in obj) {
+            if (addArr.includes(i)) {
+                if (isNaN(obj[i])) {
+                    arr.push(`'${obj[i]}'`)
+                } else {
+                    arr.push(`${obj[i]}`)
+                }
+            }
+        }
+        let keyStr = addArr.join(',')
+        let valStr = arr.join(',')
+        str = arr.join(',')
+        return `INSERT INTO ${tableName}(${keyStr}) VALUES(${valStr})`
+    },
+    deleteSql() {
+
     },
     getLimit(page, pageSize) {
         let obj = {}
@@ -27,5 +64,19 @@ module.exports = {
             }
         }
         return obj
+    },
+    /**
+     * 
+     * @param {*} res 服务器响应
+     * @param {*} err sql报错
+     * @param {*} errStatus 错误状态码
+     */
+    errorRes(res, err, errStatus) {
+        let statusCode = errStatus || 500
+        res.status(statusCode).json({
+            code: 100,
+            msg: err
+        })
     }
 }
+module.exports = utilFunc
