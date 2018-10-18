@@ -2,11 +2,16 @@ let { query } = require('../sql/mysql')
 let { querySql, errorRes, updateSql, addSql } = require('../utils/index')
 module.exports = {
     queryStaff(req, res) {
-        let sql = querySql('staffs', req.body, ['name', 'id', 'status'])
-        query(sql).then(result => {
-            res.json({
-                code: 0,
-                data: result
+        let sql = querySql('staffs', req.query, ['name', 'id', 'status'])
+        query(sql.data).then(result => {
+            query(sql.total).then(rs => {
+                res.json({
+                    code: 0,
+                    data: result,
+                    total: rs[0]['COUNT(1)']
+                })
+            }).catch(err => {
+                errorRes(res, err)
             })
         }).catch(err => {
             errorRes(res, err)
@@ -15,7 +20,6 @@ module.exports = {
     updateStaff(req, res) {
         let id = req.body.id
         let sql = updateSql('staffs', req.body, ['sexual', 'birthday', 'role', 'status', 'tell', 'update_time'])
-        console.log(sql)
         query(`SELECT * FROM staffs WHERE id=${id}`).then(result => {
             if(result.length) {
                 query(sql).then(() => {

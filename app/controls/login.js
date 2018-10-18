@@ -4,8 +4,14 @@ const sha1 = require('sha1')
 
 module.exports = {
     register(req, res) {
+        if (req.body.icode !== '123') {
+            return res.json({
+                code: 100,
+                msg: '推荐码有误'
+            })
+        }
         let sql = querySql('sys_users', req.body, ['name'])
-        query(sql).then((result) => {
+        query(sql.data).then((result) => {
             if (result.length) {
                 res.json({
                     code: 100,
@@ -14,7 +20,6 @@ module.exports = {
             } else {
                 req.body.password = sha1(req.body.password)
                 let sql = addSql('sys_users', req.body, ['name', 'password', 'create_time', 'update_time'])
-                console.log(sql)
                 query(sql).then(() => {
                     res.json({
                         code: 0,
@@ -31,12 +36,13 @@ module.exports = {
     passwordChange(req, res) {
         let { name, oldpassword, newpassword, update_time } = req.body
         let sql = querySql('sys_users', req.body, ['name'])
-        query(sql).then(result => {
+        query(sql.data).then(result => {
             if (result.length) {
                 if(result[0].password === sha1(oldpassword)) {
                     newpassword = sha1(newpassword)
                     let sql = updateSql('sys_users', {password: newpassword, update_time, name}, ['password', 'update_time'], 'name')
                     query(sql).then(() => {
+                        req.session.user = null
                         res.json({
                             code: 0,
                             msg: '密码修改成功'
@@ -62,7 +68,7 @@ module.exports = {
     },
     login(req, res) {
         let sql = querySql('sys_users', req.body, ['name'])
-        query(sql).then((result) => {
+        query(sql.data).then((result) => {
             if (result.length) {
                 if (result[0].password === sha1(req.body.password)) {
                     req.session.user = result[0]
@@ -87,12 +93,8 @@ module.exports = {
         })
     },
     loginOut(req, res) {
-        console.log(222222)
         let sql = querySql('sys_users', req.body, ['name'])
-        console.log(sql)
-        console.log(11111)
-        query(sql).then(result => {
-            console.log(result)
+        query(sql.data).then(result => {
             if (result.length) {
                 req.session.user = null
                 res.json({

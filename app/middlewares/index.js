@@ -11,19 +11,16 @@ exports.setHeader = (req, res, next) => {
 }
 
 exports.checkLogin = (req, res, next) => {
-    console.log(req.session.user)
     if((req.url.indexOf('/api/') > -1
         && req.url.indexOf('/api/login') <= -1
         && req.url.indexOf('/api/register') <= -1
         && req.url.indexOf('/api/password_change') <= -1)
         && !req.session.user
     ) {
-        console.log('checklogin no login')
         res.json({
             code: 401,
             msg: '您暂未登录！'
         })
     }
-    console.log('has logined')
     next()
 }
