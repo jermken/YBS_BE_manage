@@ -1,5 +1,5 @@
 let { query } = require('../sql/mysql')
-let { querySql, errorRes, updateSql, addSql } = require('../utils/index')
+let { queryExactSql, errorRes, updateSql, addSql } = require('../utils/index')
 const sha1 = require('sha1')
 
 module.exports = {
@@ -10,7 +10,7 @@ module.exports = {
                 msg: '推荐码有误'
             })
         }
-        let sql = querySql('sys_users', req.body, ['name'])
+        let sql = queryExactSql('sys_users', req.body, ['name'])
         query(sql.data).then((result) => {
             if (result.length) {
                 res.json({
@@ -35,7 +35,7 @@ module.exports = {
     },
     passwordChange(req, res) {
         let { name, oldpassword, newpassword, update_time } = req.body
-        let sql = querySql('sys_users', req.body, ['name'])
+        let sql = queryExactSql('sys_users', req.body, ['name'])
         query(sql.data).then(result => {
             if (result.length) {
                 if(result[0].password === sha1(oldpassword)) {
@@ -67,7 +67,7 @@ module.exports = {
         })
     },
     login(req, res) {
-        let sql = querySql('sys_users', req.body, ['name'])
+        let sql = queryExactSql('sys_users', req.body, ['name'])
         query(sql.data).then((result) => {
             if (result.length) {
                 if (result[0].password === sha1(req.body.password)) {
@@ -93,7 +93,7 @@ module.exports = {
         })
     },
     loginOut(req, res) {
-        let sql = querySql('sys_users', req.body, ['name'])
+        let sql = queryExactSql('sys_users', req.body, ['name'])
         query(sql.data).then(result => {
             if (result.length) {
                 req.session.user = null

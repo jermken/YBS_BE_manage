@@ -19,6 +19,26 @@ const utilFunc = {
             total: `SELECT COUNT(1) FROM ${tableName} ${str}`
         }
     },
+    queryExactSql(tableName, obj, queryArr) {
+        let str = ''
+        let arr = []
+        for(let i in obj) {
+            if (obj[i] !== '' && queryArr.includes(i)) {
+                if (isNaN(obj[i])) {
+                    arr.push(`${i}='${obj[i]}'`)
+                } else {
+                    arr.push(`${i}=${obj[i]}`)
+                }
+            }
+        }
+        str = arr.join(' AND ')
+        str = str? `WHERE ${str}` : ''
+        let limit = utilFunc.getLimit(obj.page, obj.pageSize)
+        return {
+            data: `SELECT * FROM ${tableName} ${str} LIMIT ${limit.start},${limit.length}`,
+            total: `SELECT COUNT(1) FROM ${tableName} ${str}`
+        }
+    },
     updateSql(tableName, obj, updateArr, where) {
         let str = ''
         let arr = []

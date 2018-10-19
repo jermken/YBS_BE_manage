@@ -17,6 +17,16 @@ module.exports = {
             errorRes(res, err)
         })
     },
+    queryStaffDetail(req, res) {
+        query(`SELECT * FROM staffs WHERE id=${req.query.id}`).then(result => {
+            res.json({
+                code: 0,
+                data: result[0]
+            })
+        }).catch(err => {
+            errorRes(res, err)
+        })
+    },
     updateStaff(req, res) {
         let id = req.body.id
         let sql = updateSql('staffs', req.body, ['sexual', 'birthday', 'role', 'status', 'tell', 'update_time'])

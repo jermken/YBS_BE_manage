@@ -67,6 +67,23 @@ let Users =
     );`
 
 /** 
+ * 产品表
+ * id  唯一标志
+*/
+let Goods =
+`create table if not exists goods(
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL COMMENT '客户名',
+    price VARCHAR(100) NOT NULL COMMENT '价格',
+    size VARCHAR(100) NOT NULL COMMENT '规格',
+    minNum INT NOT NULL COMMENT '库存警线',
+    num INT NOT NULL COMMENT '库存',
+    status INT NOT NULL COMMENT '状态',
+    remark VARCHAR(100) NOT NULL COMMENT '备注',
+    PRIMARY KEY(id)
+);`
+
+/** 
  * 流水表
  * id  唯一标志
 */
@@ -91,6 +108,7 @@ let createTable = (sql) => {
 createTable(SysUsers)
 createTable(Staffs)
 createTable(Users)
+createTable(Goods)
 createTable(Bills)
 
 exports.query = query
