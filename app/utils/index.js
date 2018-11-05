@@ -11,6 +11,9 @@ const utilFunc = {
                 }
             }
         }
+        if (obj.start_time && obj.end_time && queryArr.includes('start_time') && queryArr.includes('end_time')) {
+            arr.push(`create_time BETWEEN ${obj.start_time} AND ${obj.end_time}`)
+        }
         str = arr.join(' AND ')
         str = str? `WHERE ${str}` : ''
         let limit = utilFunc.getLimit(obj.page, obj.pageSize)

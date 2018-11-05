@@ -31,8 +31,8 @@ let SysUsers =
         id INT NOT NULL AUTO_INCREMENT,
         name VARCHAR(100) NOT NULL COMMENT '用户名',
         password VARCHAR(100) NOT NULL COMMENT '密码',
-        create_time VARCHAR(100) NOT NULL COMMENT '注册时间',
-        update_time VARCHAR(100) NOT NULL COMMENT '修改时间',
+        create_time INT NOT NULL COMMENT '注册时间',
+        update_time INT NOT NULL COMMENT '修改时间',
         PRIMARY KEY(id)
     );`
 
@@ -49,8 +49,8 @@ let Staffs =
     birthday VARCHAR(100) NOT NULL COMMENT '生日',
     role VARCHAR(100) NOT NULL COMMENT '角色',
     status INT NOT NULL COMMENT '状态',
-    create_time VARCHAR(100) NOT NULL COMMENT '注册时间',
-    update_time VARCHAR(100) NOT NULL COMMENT '修改时间',
+    create_time INT NOT NULL COMMENT '注册时间',
+    update_time INT NOT NULL COMMENT '修改时间',
     PRIMARY KEY(id)
 );`
     
@@ -61,8 +61,18 @@ let Staffs =
 let Users = 
     `create table if not exists users(
         id INT NOT NULL AUTO_INCREMENT,
+        create_time INT NOT NULL COMMENT '注册时间',
+        update_time INT NOT NULL COMMENT '修改时间',
         name VARCHAR(100) NOT NULL COMMENT '客户名',
         sexual VARCHAR(100) NOT NULL COMMENT '性别',
+        is_vip VARCHAR(100) NOT NULL COMMENT '是否会员',
+        status VARCHAR(100) NOT NULL COMMENT '状态',
+        birthday VARCHAR(100) NOT NULL COMMENT '生日',
+        tell VARCHAR(100) NOT NULL COMMENT '联系方式',
+        card_amount VARCHAR(100) NOT NULL COMMENT '卡内余额',
+        present_amount VARCHAR(100) NOT NULL COMMENT '赠送金额',
+        points VARCHAR(100) NOT NULL COMMENT '积分',
+        remark VARCHAR(100) NOT NULL COMMENT '备注',
         PRIMARY KEY(id)
     );`
 
@@ -73,12 +83,30 @@ let Users =
 let Goods =
 `create table if not exists goods(
     id INT NOT NULL AUTO_INCREMENT,
+    create_time INT NOT NULL COMMENT '创建时间',
+    update_time INT NOT NULL COMMENT '修改时间',
     name VARCHAR(100) NOT NULL COMMENT '客户名',
     price VARCHAR(100) NOT NULL COMMENT '价格',
     size VARCHAR(100) NOT NULL COMMENT '规格',
     minNum INT NOT NULL COMMENT '库存警线',
     num INT NOT NULL COMMENT '库存',
     status INT NOT NULL COMMENT '状态',
+    remark VARCHAR(100) NOT NULL COMMENT '备注',
+    PRIMARY KEY(id)
+);`
+
+/** 
+ * 卡类表
+ * id  唯一标志
+*/
+let Cards =
+`create table if not exists cards(
+    id INT NOT NULL AUTO_INCREMENT,
+    create_time INT NOT NULL COMMENT '创建时间',
+    update_time INT NOT NULL COMMENT '修改时间',
+    name VARCHAR(100) NOT NULL COMMENT '卡类名',
+    price VARCHAR(100) NOT NULL COMMENT '价格',
+    list VARCHAR(100) NOT NULL COMMENT '客户列表',
     remark VARCHAR(100) NOT NULL COMMENT '备注',
     PRIMARY KEY(id)
 );`
@@ -110,5 +138,6 @@ createTable(Staffs)
 createTable(Users)
 createTable(Goods)
 createTable(Bills)
+createTable(Cards)
 
 exports.query = query

@@ -1,4 +1,4 @@
-exports.user = require('./user.js')
+exports.user = require('./user')
 exports.login = require('./login')
 exports.bill = require('./bill')
 exports.card = require('./bill')
