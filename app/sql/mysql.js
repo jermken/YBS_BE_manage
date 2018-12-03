@@ -80,6 +80,7 @@ let Goods =
     num INT NOT NULL COMMENT '库存',
     status INT NOT NULL COMMENT '状态',
     remark VARCHAR(100) NOT NULL COMMENT '备注',
+    imgUrl VARCHAR(100) NOT NULL COMMENT '图片地址',
     PRIMARY KEY(id)
 );`
 

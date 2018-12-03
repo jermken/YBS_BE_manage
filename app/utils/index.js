@@ -58,6 +58,7 @@ const utilFunc = {
     },
     addSql(tableName, obj, addArr) {
         let arr = []
+        let keyArr = []
         for(let i in obj) {
             if (addArr.includes(i)) {
                 if (isNaN(obj[i])) {
@@ -65,9 +66,10 @@ const utilFunc = {
                 } else {
                     arr.push(`${obj[i]}`)
                 }
+                keyArr.push(i)
             }
         }
-        let keyStr = addArr.join(',')
+        let keyStr = keyArr.join(',')
         let valStr = arr.join(',')
         str = arr.join(',')
         return `INSERT INTO ${tableName}(${keyStr}) VALUES(${valStr})`

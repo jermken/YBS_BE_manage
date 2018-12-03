@@ -1,7 +1,7 @@
 const qiniu = require('qiniu')
 
-let accessKey = ''
-let secretKey = ''
+let accessKey = 'uHpQbWv9mpvMixCI4l-_U88RXbu1hSIratdSIvVf'
+let secretKey = 'PAxlleZ-RyKJsp4Of9tC9PRYEbRenn3eqiW2v7Ad'
 let bucket = 'jermken-ybs'
 module.exports = {
     getToken(req, res) {

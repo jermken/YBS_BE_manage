@@ -29,7 +29,7 @@ module.exports = {
     },
     updateGoods(req, res) {
         let id = req.body.id
-        let sql = updateSql('goods', req.body, ['name', 'price', 'size', 'minNum', 'status', 'remark', 'num'])
+        let sql = updateSql('goods', req.body, ['name', 'price', 'size', 'minNum', 'status', 'remark', 'num', 'imgUrl'])
         query(`SELECT * FROM goods WHERE id=${id}`).then(result => {
             console.log(result)
             if(result.length) {
@@ -57,7 +57,7 @@ module.exports = {
                 })
             } else {
                 req.body.num = 0
-                let sql = addSql('goods', req.body, ['name', 'price', 'size', 'minNum', 'status', 'remark', 'num'])
+                let sql = addSql('goods', req.body, ['name', 'price', 'size', 'minNum', 'status', 'remark', 'num', 'imgUrl'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,
