@@ -31,7 +31,8 @@ module.exports = {
     getGoodsDetail: '/api/get_goods_detail',
     // 用户
     getUserList: '/api/get_user',
-    addUserList: '/api/add_user',
+    getUserDetail: '/api/get_user_detail',
+    addUser: '/api/add_user',
     updateUser: '/api/update_user',
     deleteUser: '/api/delete_user',
     // 卡类
@@ -39,6 +40,8 @@ module.exports = {
     addCard: '/api/add_card',
     updateCard: '/api/update_card',
     deleteCard:'/api/delete_card',
+    addUserToCard: '/api/add_userto_card',
+    deleteUserFromCard: '/api/delete_userfrom_card',
     // 账单
     getBillList: '/api/get_bill',
     addBill: '/api/add_bill',
