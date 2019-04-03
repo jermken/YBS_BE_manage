@@ -18,7 +18,10 @@ module.exports = {
                     msg: '该用户名已存在'
                 })
             } else {
+                let time = +new Date()
                 req.body.password = sha1(req.body.password)
+                req.body.create_time = time
+                req.body.update_time = time
                 let sql = addSql('sys_users', req.body, ['name', 'password', 'create_time', 'update_time'])
                 query(sql).then(() => {
                     res.json({
@@ -34,6 +37,7 @@ module.exports = {
         })
     },
     passwordChange(req, res) {
+        req.body.update_time = +new Date()
         let { name, oldpassword, newpassword, update_time } = req.body
         let sql = queryExactSql('sys_users', req.body, ['name'])
         query(sql.data).then(result => {

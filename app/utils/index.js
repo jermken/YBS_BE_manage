@@ -60,19 +60,20 @@ const utilFunc = {
         return `UPDATE ${tableName} SET ${str} WHERE ${whereStr}`
     },
     addSql(tableName, obj, addArr) {
-        let arr = []
+        let valArr = []
+        let keyArr = []
         for(let i in obj) {
             if (addArr.includes(i)) {
+                keyArr.push(i)
                 if (isNaN(obj[i])) {
-                    arr.push(`'${obj[i]}'`)
+                    valArr.push(`'${obj[i]}'`)
                 } else {
-                    arr.push(`${obj[i]}`)
+                    valArr.push(`${obj[i]}`)
                 }
             }
         }
-        let keyStr = addArr.join(',')
-        let valStr = arr.join(',')
-        str = arr.join(',')
+        let keyStr = keyArr.join(',')
+        let valStr = valArr.join(',')
         return `INSERT INTO ${tableName}(${keyStr}) VALUES(${valStr})`
     },
     deleteSql() {

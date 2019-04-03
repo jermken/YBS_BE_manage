@@ -58,11 +58,12 @@ module.exports = {
     updateBook: '/api/update_book',
     deleteBook: '/api/delete_book',
     // 库存
+    getGoodsStore: '/api/get_goodsstore',
     getStore: '/api/get_store',
-    addStore: '/api/add_store',
-    outStore: '/api/out_store',
-    getJoinStore: '/api/get_joinstore',
-    getOutStore: '/api/get_outstore',
+    createStore: '/api/create_store',
+    deleteStore: '/api/delete_store',
+    updateStore: '/api/update_store',
+    storeDetail: '/api/store_detail',
     // 文档
     getDocument: '/api/get_document',
     addDocument: '/api/add_document',

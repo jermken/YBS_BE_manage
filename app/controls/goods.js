@@ -2,7 +2,8 @@ let { query } = require('../sql/mysql')
 let { querySql, errorRes, updateSql, addSql } = require('../utils/index')
 module.exports = {
     queryGoods(req, res) {
-        let sql = querySql('goods', req.query, ['name', 'code', 'status'])
+        let queryKeys = req.query.status == 2 ? ['name', 'code'] : ['name', 'code', 'status']
+        let sql = querySql('goods', req.query, queryKeys)
         query(sql.data).then(result => {
             query(sql.total).then(rs => {
                 res.json({
@@ -29,12 +30,11 @@ module.exports = {
     },
     updateGoods(req, res) {
         let id = req.body.id
-        let sql = updateSql('goods', req.body, ['name', 'price', 'size', 'minNum', 'status', 'remark', 'num'])
+        req.body.update_time = +new Date()
+        req.body.safeStatus = req.body.num - req.body.minNum > 0 ? 1 : 0
+        let sql = updateSql('goods', req.body, ['safeStatus', 'name', 'price', 'size', 'minNum', 'status', 'remark', 'num', 'update_time'])
         query(`SELECT * FROM goods WHERE id=${id}`).then(result => {
-            console.log(result)
             if(result.length) {
-                console.log(22222)
-                console.log(sql)
                 query(sql).then(() => {
                     res.json({
                         code: 0,
@@ -56,8 +56,12 @@ module.exports = {
                     msg: '该产品已存在'
                 })
             } else {
+                let time = +new Date()
                 req.body.num = 0
-                let sql = addSql('goods', req.body, ['name', 'price', 'size', 'minNum', 'status', 'remark', 'num'])
+                req.body.create_time = time
+                req.body.update_time = time
+                req.body.safeStatus = 0
+                let sql = addSql('goods', req.body, ['safeStatus', 'imgUrl', 'name', 'price', 'size', 'minNum', 'status', 'remark', 'num', 'create_time', 'update_time'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,
