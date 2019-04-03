@@ -70,6 +70,7 @@ const utilFunc = {
                 } else {
                     valArr.push(`${obj[i]}`)
                 }
+                keyArr.push(i)
             }
         }
         let keyStr = keyArr.join(',')
