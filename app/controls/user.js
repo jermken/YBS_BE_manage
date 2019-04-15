@@ -19,7 +19,7 @@ module.exports = {
         })
     },
     queryUserDetail(req, res) {
-        query(`SELECT * FROM goods WHERE id=${req.query.id}`).then(result => {
+        query(`SELECT * FROM users WHERE id=${req.query.id}`).then(result => {
             res.json({
                 code: 0,
                 data: result[0]
@@ -38,12 +38,13 @@ module.exports = {
             } else {
                 req.body.create_time = +new Date()
                 req.body.update_time = +new Date()
-                req.body.card_amount = '0'
-                req.body.present_amount = '0'
-                req.body.points = '0'
-                req.body.is_vip = '0'
-                req.body.status = '1'
-                let sql = addSql('users', req.body, ['create_time', 'update_time', 'name', 'sexual', 'is_vip', 'status', 'birthday', 'tell', 'card_amount', 'present_amount', 'points', 'remark'])
+                req.body.card_amount = 0
+                req.body.present_amount = 0
+                req.body.consume_total = 0
+                req.body.consume_times = 0
+                let sql = addSql('users', req.body, ['create_time', 'update_time', 'name', 'sexual', 'is_vip',
+                'status', 'birthday', 'tell', 'card_amount', 'present_amount', 'points', 'remark',
+                'consume_total', 'consume_times', 'cards', 'setmeal'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,

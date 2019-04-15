@@ -2,7 +2,17 @@ let { query } = require('../sql/mysql')
 let { querySql, errorRes, updateSql, addSql } = require('../utils/index')
 module.exports = {
     queryGoodsStore(req, res) {
-        let sql = querySql('goods', req.query, ['name', 'code', 'safeStatus'])
+        let specialQuery = ''
+        let code = req.query.code
+        if (req.query.status == 0) {
+            specialQuery = `num-minNum<=0`
+            if (code != '') {
+                specialQuery = `${specialQuery} AND id like '%${code}%'`
+            }
+        } else {
+            specialQuery = `id like '%${code}%'`
+        }
+        let sql = querySql('goods', req.query, ['name'], specialQuery)
         query(sql.data).then(result => {
             query(sql.total).then(rs => {
                 res.json({
@@ -18,8 +28,8 @@ module.exports = {
         })
     },
     queryStore(req, res) {
-        let queryKeys = req.query.status == 0 ? ['name'] : ['name', 'status']
-        let sql = querySql('store', req.query, ['name', 'status'])
+        let queryKeys = req.query.status == 0 ? [] : ['status']
+        let sql = querySql('store', req.query, queryKeys)
         query(sql.data).then(result => {
             query(sql.total).then(rs => {
                 res.json({
@@ -61,38 +71,41 @@ module.exports = {
     },
     updateStore(req, res) {
         let id = req.body.id
-        req.body.update_time = +new Date()
         let { status, list } = req.body
-        let queryKeys = req.body.status == 1 ? ['update_time', 'list', 'remark', 'actioner'] : ['status']
-        let sql = updateSql('store', req.body, ['update_time', 'list', 'status', 'remark', 'actioner'])
-        query(`SELECT * FROM goods WHERE id=${id}`).then(result => {
+        let queryKeys = []
+        if (req.body.status !== 1) {
+            req.body.auditor_time = +new Date()
+            queryKeys = ['status', 'auditor_name', 'auditor_time']
+        } else {
+            req.body.update_time = +new Date()
+            queryKeys = ['update_time', 'list', 'remark', 'actioner']
+        }
+        let sql = updateSql('store', req.body, queryKeys)
+        query(`SELECT * FROM store WHERE id=${id}`).then(result => {
             if(result.length) {
                 query(sql).then(() => {
-                    if (status == 3) {
-                        let goodsList = JSON.parse(JSON.stringify(list || []))
+                    if (status == 2) {
+                        let goodsList = JSON.parse(list || '[]')
                         if (!goodsList.length) {
                             return res.json({
                                 code: 0,
                                 msg: '入库成功'
                             })
                         }
-                        goodsList.forEach((item) => {
-                            query(`SELECT * FROM goods WHERE id=${item.id}`).then(result => {
-                                if(result.length) {
-                                    let obj = {
-                                        id: item.id,
-                                        num: item.num + result[0].num
-                                    }
-                                    let sql = updateSql('goods', obj,  ['num'])
-                                    query(sql).then(() => {
-                                    }).catch(err => {
-                                        errorRes(res, err)
-                                        return
-                                    })
-                                }
-                            }).catch(err => {
-                                errorRes(res, err)
+                        let sql = 'UPDATE goods SET num = num + CASE id '
+                        let idArr = []
+                        goodsList.forEach(item => {
+                            sql = sql + `WHEN ${item.id} THEN ${item.num} `
+                            idArr.push(item.id)
+                        })
+                        sql = sql + `END WHERE id IN (${idArr.join(',')})`
+                        query(sql).then(() => {
+                            return res.json({
+                                code: 0,
+                                msg: '入库成功'
                             })
+                        }).catch(err => {
+                            errorRes(res, err)
                         })
                     } else {
                         res.json({

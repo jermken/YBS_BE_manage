@@ -1,21 +1,28 @@
 const utilFunc = {
-    querySql(tableName, obj, queryArr) {
+    querySql(tableName, obj, queryArr, specialQuery) {
         let str = ''
         let arr = []
         for(let i in obj) {
             if (obj[i] !== '' && queryArr.includes(i)) {
+                if (i == 'name') {
+                    arr.push(`name like '%${obj[i]}%'`)
+                    continue
+                }
                 if (isNaN(obj[i])) {
-                    arr.push(`POSITION('${obj[i]}' IN ${i})`)
+                    arr.push(`${i} in ('${obj[i]}')`)
                 } else {
-                    arr.push(`POSITION(${obj[i]} IN ${i})`)
+                    arr.push(`${i} in (${obj[i]})`)
                 }
             }
         }
         if (obj.start_time && obj.end_time && queryArr.includes('start_time') && queryArr.includes('end_time')) {
             arr.push(`create_time BETWEEN ${obj.start_time} AND ${obj.end_time}`)
         }
+        if (specialQuery) {
+            arr.push(specialQuery)
+        }
         str = arr.join(' AND ')
-        str = str? `WHERE ${str}` : ''
+        str = str? `WHERE ${str}` : (specialQuery ? `WHERE ${specialQuery}` : '')
         let limit = utilFunc.getLimit(obj.page, obj.pageSize)
         return {
             data: `SELECT * FROM ${tableName} ${str} LIMIT ${limit.start},${limit.length}`,
@@ -65,12 +72,11 @@ const utilFunc = {
         for(let i in obj) {
             if (addArr.includes(i)) {
                 keyArr.push(i)
-                if (isNaN(obj[i])) {
+                if (isNaN(obj[i]) || obj[i] === '') {
                     valArr.push(`'${obj[i]}'`)
                 } else {
                     valArr.push(`${obj[i]}`)
                 }
-                keyArr.push(i)
             }
         }
         let keyStr = keyArr.join(',')
