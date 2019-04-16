@@ -17,6 +17,22 @@ module.exports = {
             errorRes(res, err)
         })
     },
+    queryCardSaleList(req, res) {
+        let sql = querySql('cardsalelist', req.query, ['name'])
+        query(sql.data).then(result => {
+            query(sql.total).then(rs => {
+                res.json({
+                    code: 0,
+                    data: result,
+                    total: rs[0]['COUNT(1)']
+                })
+            }).catch(err => {
+                errorRes(res, err)
+            })
+        }).catch(err => {
+            errorRes(res, err)
+        })
+    },
     queryCardDetail(req, res) {
         query(`SELECT * FROM cards WHERE id=${req.query.id}`).then(result => {
             res.json({
@@ -38,7 +54,7 @@ module.exports = {
                 req.body.create_time = +new Date()
                 req.body.update_time = +new Date()
                 req.body.status = '1'
-                let sql = addSql('cards', req.body, ['create_time', 'update_time', 'name', 'price', 'list', 'remark'])
+                let sql = addSql('cards', req.body, ['create_time', 'update_time', 'name', 'price', 'present_price', 'status', 'list', 'remark'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,
@@ -48,6 +64,18 @@ module.exports = {
                     errorRes(res, err)
                 })
             }
+        }).catch(err => {
+            errorRes(res, err)
+        })
+    },
+    addCardSaleList(req, res) {
+        req.body.create_time = +new Date()
+        let sql = addSql('cardsalelist', req.body, ['create_time', 'card_name', 'user_name', 'price', 'present_price'])
+        query(sql).then(() => {
+            res.json({
+                code: 0,
+                msg: '添加卡类售卖历史成功'
+            })
         }).catch(err => {
             errorRes(res, err)
         })
@@ -84,7 +112,7 @@ module.exports = {
                 } else {
                     list.push(user_id)
                     let listStr = list.join(',')
-                    let sql = updateSql('cards', {list: listStr}, ['list'])
+                    let sql = updateSql('cards', {list: listStr, id: card_id}, ['list'])
                     query(sql).then(() => {
                         res.json({
                             code: 0,
@@ -108,7 +136,7 @@ module.exports = {
                 if (idx > -1) {
                     list = list.splice(idx, 1)
                     let listStr = list.join(',')
-                    let sql = updateSql('cards', {list: listStr}, ['list'])
+                    let sql = updateSql('cards', {list: listStr, id: card_id}, ['list'])
                     query(sql).then(() => {
                         res.json({
                             code: 0,

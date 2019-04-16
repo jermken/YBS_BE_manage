@@ -1,7 +1,7 @@
 exports.user = require('./user')
 exports.login = require('./login')
 exports.bill = require('./bill')
-exports.card = require('./bill')
+exports.card = require('./card')
 exports.goods = require('./goods')
 exports.setMeal = require('./setMeal')
 exports.staff = require('./staff')

@@ -110,7 +110,7 @@ let Store =
     create_time BIGINT NOT NULL COMMENT '创建时间',
     update_time BIGINT NOT NULL COMMENT '修改时间',
     auditor_time BIGINT NOT NULL COMMENT '审核时间' DEFAULT 0,
-    list VARCHAR(100) NOT NULL COMMENT '入库详情',
+    list LONGTEXT NOT NULL COMMENT '入库详情',
     status INT NOT NULL COMMENT '状态',
     remark VARCHAR(100) NOT NULL COMMENT '备注' DEFAULT '',
     actioner VARCHAR(100) NOT NULL COMMENT '操作人',
@@ -128,9 +128,65 @@ let Cards =
     create_time BIGINT NOT NULL COMMENT '创建时间',
     update_time BIGINT NOT NULL COMMENT '修改时间',
     name VARCHAR(100) NOT NULL COMMENT '卡类名',
-    price VARCHAR(100) NOT NULL COMMENT '价格',
-    list VARCHAR(100) NOT NULL COMMENT '客户列表',
+    price INT NOT NULL COMMENT '价格' DEFAULT 0,
+    status INT NOT NULL COMMENT '状态' DEFAULT 0,
+    present_price INT NOT NULL COMMENT '赠送金额' DEFAULT 0,
+    list LONGTEXT NOT NULL COMMENT '客户列表',
     remark VARCHAR(100) NOT NULL COMMENT '备注',
+    PRIMARY KEY(id)
+);`
+
+/**
+ * 卡类销售表
+ * id  唯一标志
+*/
+let CardSaleList =
+`create table if not exists cardsalelist(
+    id INT NOT NULL AUTO_INCREMENT,
+    create_time BIGINT NOT NULL COMMENT '创建时间',
+    card_name VARCHAR(100) NOT NULL COMMENT '卡类名',
+    user_name VARCHAR(100) NOT NULL COMMENT '客户名',
+    price INT NOT NULL COMMENT '价格' DEFAULT 0,
+    present_price INT NOT NULL COMMENT '赠送金额' DEFAULT 0,
+    status INT NOT NULL COMMENT '状态' DEFAULT 0,
+    PRIMARY KEY(id)
+);`
+
+/**
+ * 套餐表
+ * id  唯一标志
+*/
+let Setmeal =
+`create table if not exists setmeal(
+    id INT NOT NULL AUTO_INCREMENT,
+    create_time BIGINT NOT NULL COMMENT '创建时间',
+    update_time BIGINT NOT NULL COMMENT '修改时间',
+    start_time BIGINT NOT NULL COMMENT '开始时间' DEFAULT 0,
+    end_time BIGINT NOT NULL COMMENT '结束时间' DEFAULT 0,
+    name VARCHAR(100) NOT NULL COMMENT '套餐名',
+    price INT NOT NULL COMMENT '价格' DEFAULT 0,
+    status INT NOT NULL COMMENT '状态' DEFAULT 0,
+    project LONGTEXT NOT NULL COMMENT '套餐项目',
+    list LONGTEXT NOT NULL COMMENT '客户列表',
+    remark VARCHAR(100) NOT NULL COMMENT '备注',
+    PRIMARY KEY(id)
+);`
+
+/**
+ * 套餐消费表
+ * id  唯一标志
+*/
+let SetmealSaleList =
+`create table if not exists setmealsalelist(
+    id INT NOT NULL AUTO_INCREMENT,
+    create_time BIGINT NOT NULL COMMENT '创建时间',
+    setmeal_id INT NOT NULL COMMENT '套餐id',
+    setmeal_name VARCHAR(100) NOT NULL COMMENT '套餐名',
+    user_id INT NOT NULL COMMENT '客户id',
+    user_name VARCHAR(100) NOT NULL COMMENT '客户名',
+    price INT NOT NULL COMMENT '价格' DEFAULT 0,
+    status INT NOT NULL COMMENT '状态' DEFAULT 0,
+    project LONGTEXT NOT NULL COMMENT '套餐项目',
     PRIMARY KEY(id)
 );`
 
@@ -163,5 +219,8 @@ createTable(Goods)
 createTable(Store)
 createTable(Bills)
 createTable(Cards)
+createTable(CardSaleList)
+createTable(Setmeal)
+createTable(SetmealSaleList)
 
 exports.query = query

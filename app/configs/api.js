@@ -37,11 +37,14 @@ module.exports = {
     deleteUser: '/api/delete_user',
     // 卡类
     getCardList: '/api/get_card',
+    getCardDetail: '/api/get_card_detail',
     addCard: '/api/add_card',
     updateCard: '/api/update_card',
     deleteCard:'/api/delete_card',
     addUserToCard: '/api/add_userto_card',
     deleteUserFromCard: '/api/delete_userfrom_card',
+    addCardSaleList: '/api/add_cardsale_list',
+    queryCardSaleList: '/api/get_cardsale_list',
     // 账单
     getBillList: '/api/get_bill',
     addBill: '/api/add_bill',
