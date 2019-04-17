@@ -57,9 +57,8 @@ module.exports = {
                 req.body.present_amount = 0
                 req.body.consume_total = 0
                 req.body.consume_times = 0
-                let sql = addSql('setmeal', req.body, ['create_time', 'update_time', 'name', 'sexual', 'is_vip',
-                'status', 'birthday', 'tell', 'card_amount', 'present_amount', 'points', 'remark',
-                'consume_total', 'consume_times', 'cards', 'setmeal'])
+                let sql = addSql('setmeal', req.body, ['create_time', 'update_time', 'start_time', 'end_time', 'name',
+                'price', 'status', 'project', 'list', 'remark'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,
@@ -75,7 +74,6 @@ module.exports = {
     },
     addSetmealSaleList(req, res) {
         req.body.create_time = +new Date()
-        req.body.update_time = +new Date()
         let sql = addSql('SetmealSaleList', req.body, ['create_time', 'setmeal_id', 'setmeal_name', 'user_id',
         'user_name', 'price', 'status', 'project'])
         query(sql).then(() => {
@@ -92,7 +90,8 @@ module.exports = {
         query(`SELECT * FROM setmeal WHERE id=${id}`).then(result => {
             if(result.length) {
                 req.body.update_time = +new Date()
-                let sql = updateSql('setmeal', req.body, ['create_time', 'update_time', 'name', 'sexual', 'is_vip', 'status', 'birthday', 'tell', 'card_amount', 'present_amount', 'points', 'remark'])
+                let sql = updateSql('setmeal', req.body, ['create_time', 'update_time', 'start_time', 'end_time', 'name',
+                'price', 'status', 'project', 'list', 'remark'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,
@@ -125,7 +124,7 @@ module.exports = {
             errorRes(res, err)
         })
     },
-    deleteUser(req, res) {
+    deleteSetmeal(req, res) {
         query(`DELETE FROM setmeal WHERE id=${req.body.id}`).then(() => {
             res.json({
                 code: 0,

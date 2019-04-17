@@ -52,9 +52,13 @@ module.exports = {
     deleteBill:'/api/delete_bill',
     // 套餐
     getSetMeal: '/api/get_setmeal',
+    getSetMealDetail: '/api/get_setmeal_detail',
     addSetMeal:'/api/add_setmeal',
     updateSetMeal: '/api/update_setmeal',
     deleteSetMeal: '/api/delete_setmeal',
+    getSetmealSaleList: '/api/get_setmeal_salelist',
+    addSetmealSaleList: '/api/add_setmeal_salelist',
+    updateSetmealSaleList: '/api/update_setmeal_salelist',
     // 预约
     getBookList: '/api/get_book',
     addBook: '/api/add_book',

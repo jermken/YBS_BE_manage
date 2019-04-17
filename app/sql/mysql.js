@@ -71,10 +71,7 @@ let Users =
         tell VARCHAR(100) NOT NULL COMMENT '联系方式',
         card_amount INT NOT NULL DEFAULT 0 COMMENT '卡内余额',
         present_amount INT NOT NULL DEFAULT 0 COMMENT '赠送金额',
-        consume_total INT NOT NULL DEFAULT 0 COMMENT '消费金额',
-        consume_times INT NOT NULL DEFAULT 0 COMMENT '消费次数',
-        cards VARCHAR(100) NOT NULL DEFAULT '' COMMENT '所开开类',
-        setmeal VARCHAR(100) NOT NULL DEFAULT '' COMMENT '所开套餐',
+        consume_total INT NOT NULL DEFAULT 0 COMMENT '消费总金额',
         points INT NOT NULL DEFAULT 0 COMMENT '积分',
         remark VARCHAR(100) NOT NULL DEFAULT '' COMMENT '备注',
         PRIMARY KEY(id)

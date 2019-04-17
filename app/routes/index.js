@@ -1,5 +1,5 @@
 const api = require('../configs/api.js')
-const { login, staff, goods, qiniuToken, user, store, card } = require('../controls/index.js')
+const { login, staff, goods, qiniuToken, user, store, card, setMeal } = require('../controls/index.js')
 
 module.exports = app => {
     // 登录
@@ -45,6 +45,16 @@ module.exports = app => {
     app.post(api.addUserToCard, card.addUserToCard)
     app.post(api.deleteUserFromCard, card.deleteUserFromCard)
     app.get(api.getCardDetail, card.queryCardDetail)
+
+    // 套餐
+    app.get(api.getSetMeal, setMeal.querySetmeal)
+    app.post(api.addSetMeal, setMeal.addSetmeal)
+    app.post(api.updateSetMeal, setMeal.updateSetmeal)
+    app.post(api.deleteSetMeal, setMeal.deleteSetmeal)
+    app.post(api.addSetmealSaleList, setMeal.addSetmealSaleList)
+    app.post(api.updateSetmealSaleList, setMeal.updateSetmealSaleList)
+    app.get(api.getSetmealSaleList, setMeal.querySetmealSaleList)
+    app.get(api.getSetMealDetail, setMeal.querySetmealDetail)
 
     // 七牛上传
     app.get(api.getUploadToken, qiniuToken.getToken)
