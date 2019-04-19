@@ -43,9 +43,8 @@ module.exports = {
                 req.body.consume_total = 0
                 req.body.consume_times = 0
                 let sql = addSql('users', req.body, ['create_time', 'update_time', 'name', 'sexual', 'is_vip',
-                'status', 'birthday', 'tell', 'card_amount', 'present_amount', 'points', 'remark',
-                'consume_total', 'consume_times', 'cards', 'setmeal'])
-                query(sql).then(() => {
+                'status', 'birthday', 'tell', 'card_amount', 'present_amount', 'points', 'remark'])
+                query(sql).then((rt) => {
                     res.json({
                         code: 0,
                         msg: '客户创建成功'

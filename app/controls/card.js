@@ -43,6 +43,124 @@ module.exports = {
             errorRes(res, err)
         })
     },
+    buyCard(req, res) {
+        if (req.body.user_type == 1 && !req.body.user_id) {
+            query(`SELECT * FROM users WHERE name=${req.body.user_name}`).then(result => {
+                if (result.length) {
+                    res.json({
+                        code: 100,
+                        msg: '该客户名已存在，请使用其他姓名'
+                    })
+                } else {
+                    let params = {}
+                    params.create_time = +new Date()
+                    params.update_time = +new Date()
+                    params.card_amount = req.body.price
+                    params.present_amount = req.body.present_price
+                    params.consume_total = req.body.price
+                    params.consume_times = 1
+                    params.name = req.body.user_name
+                    params.is_vip = 1
+                    params.remark = req.body.remark
+                    let sql = addSql('users', params, ['create_time', 'update_time', 'name', 'is_vip',
+                    'birthday', 'tell', 'card_amount', 'present_amount', 'remark',
+                    'consume_total', 'consume_times'])
+                    // 新增vip客户
+                    query(sql).then((rt) => {
+                        query(`SELECT * FROM cards WHERE id=${req.body.card_id}`).then(result => {
+                            if (result.length) {
+                                let cardInfo = result[0]
+                                let userList = JSON.parse(cardInfo.list)
+                                userList.push(rt.insertId)
+                                cardInfo.list = JSON.stringify(userList)
+                                let sql = updateSql('cards', cardInfo, ['list'])
+                                query(sql).then(() => {
+                                    let _sql = addSql('cardsalelist', { create_time: +new Date(), ...cardInfo}, ['create_time', 'card_name', 'user_name', 'price', 'present_price'])
+                                    query(_sql).then(() => {
+                                        res.json({
+                                            code: 0,
+                                            msg: '开卡成功'
+                                        })
+                                        let params = {}
+                                        let time = +new Date()
+                                        params.create_time = time
+                                        params.update_time = time
+                                        params.name = req.body.user_name
+                                        params.user_id = rt.insertId
+                                        params.user_type = req.body.is_vip == 1 ? 3 : 2
+                                        params.server_id = req.body.server_id
+                                        params.project = `[{name: '开卡-${cardInfo.name}', tc: ${req.body.ratio}, price: ${req.body.price}}, ratio: ${req.body.ratio_detail}]`
+                                        params.total = req.body.price
+                                        params.card_minu = 0
+                                        params.pay_amount = req.body.payment
+                                        params.no_pay = req.body.no_pay
+                                        params.remark = req.body.remark
+                                        params.status = 1
+                                        params.pay_type_detail = JSON.stringify(req.body.pay_type_detail)
+                                        let _sql_ = addSql('bills', params, ['create_time', 'update_time', 'name', 'user_id',
+                                        'user_type', 'server_id', 'project', 'total', 'card_minu', 'pay_amount', 'no_pay',
+                                        'remark', 'status', 'pay_type_detail'])
+                                        query(_sql_).then(() => {
+                                        })
+                                    }).catch(err => {
+                                        errorRes(res, err)
+                                    })
+                                }).catch(err => {
+                                    errorRes(res, err)
+                                })
+                            }
+                        })
+                    })
+                }
+            })
+        } else if (req.body.user_id){
+            query(`SELECT * FROM cards WHERE id=${req.body.card_id}`).then(result => {
+                if (result.length) {
+                    let cardInfo = result[0]
+                    let userList = JSON.parse(cardInfo.list)
+                    if (!userList.includes(req.body.user_id)) {
+                        userList.push(req.body.user_id)
+                        cardInfo.list = JSON.stringify(userList)
+                        let sql = updateSql('cards', cardInfo, ['list'])
+                        query(sql).then(() => {
+                            let _sql = addSql('cardsalelist', { create_time: +new Date(), ...cardInfo}, ['create_time', 'card_name', 'user_name', 'price', 'present_price'])
+                            query(_sql).then(() => {
+                                res.json({
+                                    code: 0,
+                                    msg: '开卡成功'
+                                })
+                                let params = {}
+                                let time = +new Date()
+                                params.create_time = time
+                                params.update_time = time
+                                params.name = req.body.user_name
+                                params.user_id = req.body.user_id
+                                params.user_type = req.body.is_vip == 1 ? 3 : 2
+                                params.server_id = req.body.server_id
+                                params.project = `['开卡-${cardInfo.name}']`
+                                params.total = req.body.price
+                                params.card_minu = 0
+                                params.pay_amount = req.body.payment
+                                params.no_pay = req.body.no_pay
+                                params.remark = req.body.remark
+                                params.status = 1
+                                params.pay_type_detail = JSON.stringify(req.body.pay_type_detail)
+                                let _sql_ = addSql('bills', params, ['create_time', 'update_time', 'name', 'user_id',
+                                'user_type', 'server_id', 'project', 'total', 'card_minu', 'pay_amount', 'no_pay',
+                                'remark', 'status', 'pay_type_detail'])
+                                query(_sql_).then(() => {
+                                })
+                            }).catch(err => {
+                                errorRes(res, err)
+                            })
+                        }).catch(err => {
+                            errorRes(res, err)
+                        })
+                    }
+                }
+            })
+        }
+    },
     addCard(req, res) {
         query(`SELECT * FROM cards WHERE name='${req.body.name}'`).then(result => {
             if(result.length) {
@@ -54,7 +172,7 @@ module.exports = {
                 req.body.create_time = +new Date()
                 req.body.update_time = +new Date()
                 req.body.status = '1'
-                let sql = addSql('cards', req.body, ['create_time', 'update_time', 'name', 'price', 'present_price', 'status', 'list', 'remark'])
+                let sql = addSql('cards', req.body, ['create_time', 'update_time', 'name', 'price', 'present_price', 'ratio', 'status', 'list', 'remark'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,
@@ -85,7 +203,7 @@ module.exports = {
         query(`SELECT * FROM cards WHERE id=${id}`).then(result => {
             if(result.length) {
                 req.body.update_time = +new Date()
-                let sql = updateSql('cards', req.body, ['create_time', 'update_time', 'name', 'price', 'list', 'remark'])
+                let sql = updateSql('cards', req.body, ['create_time', 'update_time', 'name', 'price', 'ratio', 'list', 'remark'])
                 query(sql).then(() => {
                     res.json({
                         code: 0,

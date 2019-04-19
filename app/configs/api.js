@@ -47,9 +47,11 @@ module.exports = {
     queryCardSaleList: '/api/get_cardsale_list',
     // 账单
     getBillList: '/api/get_bill',
+    getBillDetail: '/api/get_bill_detail',
     addBill: '/api/add_bill',
     updateBill: '/api/update_bill',
     deleteBill:'/api/delete_bill',
+    auditorBill: '/api/auditor_bill',
     // 套餐
     getSetMeal: '/api/get_setmeal',
     getSetMealDetail: '/api/get_setmeal_detail',
